@@ -1,5 +1,12 @@
-# User code, which contains the main() function 
-# and builds to an executable
+# Bot Application
 
-add_executable(app main.cpp)
-target_link_libraries(app PRIVATE miraipp)
+set(SOURCE_FILES
+    "main.cpp"
+ "core/app.cpp")
+
+add_executable(app ${SOURCE_FILES})
+
+find_package(fmt CONFIG REQUIRED)
+target_link_libraries(app PRIVATE
+    miraipp
+    fmt::fmt fmt::fmt-header-only)
