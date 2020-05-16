@@ -2,6 +2,7 @@
 
 struct PingPongComponent final
 {
+    static constexpr const char* name = "PingPongComponent";
     static void on_event(const mirai::Session& sess, const mirai::Event& event)
     {
         event.dispatch([&](const mirai::FriendMessage& msg)

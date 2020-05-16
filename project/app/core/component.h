@@ -9,6 +9,7 @@ namespace fc
     private:
         struct Vtable final
         {
+            const char* name = nullptr;
             void (*destruct)(void* p) noexcept = nullptr;
             void (*on_event)(void* p, const mirai::Session& s, const mirai::Event& e) = nullptr;
         };
@@ -16,6 +17,7 @@ namespace fc
         template <typename T>
         static constexpr Vtable vtable_of
         {
+            T::name,
             [](void* p) noexcept { delete static_cast<T*>(p); },
             [](void* p, const mirai::Session& s, const mirai::Event& e)
             {
@@ -70,6 +72,8 @@ namespace fc
         }
 
         friend void swap(Component& lhs, Component& rhs) noexcept { lhs.swap(rhs); }
+
+        const char* name() const { return vtable_ ? vtable_->name : nullptr; }
 
         void on_event(const mirai::Session& session, const mirai::Event& event)
         {
