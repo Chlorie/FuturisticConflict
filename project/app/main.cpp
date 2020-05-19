@@ -1,25 +1,18 @@
 #include "core/app.h"
-
-struct PingPongComponent final
-{
-    static constexpr const char* name = "PingPongComponent";
-    static void on_event(const mirai::Session& sess, const mirai::Event& event)
-    {
-        event.dispatch([&](const mirai::FriendMessage& msg)
-        {
-            if (msg.message.content == "!ping")
-                sess.send_message(msg.sender.id, "pong!");
-        });
-    }
-};
+#include "components/components.h"
 
 int main() // NOLINT
 {
     try
     {
         fc::App app;
-        app.add_component<PingPongComponent>();
+        std::cout << "Bot session successfully started!\n";
+        app.add_component<fc::DevCommands>();
+        app.add_component<fc::Repeat>();
+        app.add_component<fc::DiceRoll>();
+        std::cout << "All components initialized!\nPress Enter to stop...";
         std::cin.get();
+        std::cout << "Stopping...\n";
     }
     catch (...)
     {
