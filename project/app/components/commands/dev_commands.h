@@ -27,7 +27,7 @@ namespace fc
         void list_show(mirai::Session& sess, const CommandView& view) const;
         void list_operate_all(mirai::Session& sess, const CommandView& view) const;
         void list_operate_single(mirai::Session& sess,
-            bool is_user, bool is_add, int64_t id, std::string_view name) const;
+            bool is_user, bool is_add, int64_t id, std::string_view comp_name) const;
         void list_operate(mirai::Session& sess, const CommandView& view) const;
         bool list(mirai::Session& sess, const CommandView& view) const;
 

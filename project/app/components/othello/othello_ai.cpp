@@ -40,7 +40,7 @@ namespace fc::oth
             return bits << (row * 8 + column) >> 63;
         }
 
-        int count_bits(const BitBoard bits) { return FC_POPCNT64(bits); }
+        int count_bits(const BitBoard bits) { return static_cast<int>(FC_POPCNT64(bits)); }
 
         int count_total(const State& state) { return count_bits(state.black) + count_bits(state.white); }
 
@@ -258,7 +258,7 @@ namespace fc::oth
                         }
                     }
             if (depth < search_depth) return { -1, value };
-            const int action_count = actions.size();
+            const int action_count = static_cast<int>(actions.size());
             const int chosen_action = random::uniform_int(0, action_count - 1);
             return { actions[chosen_action], value };
         }
@@ -338,7 +338,7 @@ namespace fc::oth
                         }
                     }
             if (!is_root) return triplets[0];
-            const int action_count = triplets.size();
+            const int action_count = static_cast<int>(triplets.size());
             const int chosen_action = random::uniform_int(0, action_count - 1);
             return triplets[chosen_action];
         }

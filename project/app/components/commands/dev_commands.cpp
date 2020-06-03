@@ -107,18 +107,18 @@ namespace fc
     namespace
     {
         void component_not_found(mirai::Session& sess,
-            const mirai::uid_t dev_id, const std::string_view name)
+            const mirai::uid_t dev_id, const std::string_view comp_name)
         {
-            sess.send_message(dev_id, fmt::format(u8"我找不到名为 {} 的组件……", name));
+            sess.send_message(dev_id, fmt::format(u8"我找不到名为 {} 的组件……", comp_name));
         }
     }
 
     void DevCommands::list_show_component(mirai::Session& sess, const CommandView& view) const
     {
-        const auto name = view[3];
-        const auto str = App::instance().for_component(name, [&](const Component& comp)
+        const auto comp_name = view[3];
+        const auto str = App::instance().for_component(comp_name, [&](const Component& comp)
         {
-            std::string res = fmt::format(u8"组件 {} 的用户黑名单包含 ", name);
+            std::string res = fmt::format(u8"组件 {} 的用户黑名单包含 ", comp_name);
             {
                 const auto locked = comp->user_blacklist().to_read();
                 const auto& list = *locked;
@@ -137,7 +137,7 @@ namespace fc
         if (str)
             sess.send_message(dev_id_, *str);
         else
-            component_not_found(sess, dev_id_, name);
+            component_not_found(sess, dev_id_, comp_name);
     }
 
     void DevCommands::list_show(mirai::Session& sess, const CommandView& view) const
@@ -212,8 +212,8 @@ namespace fc
         else if (view[2] != "remove") return;
         const auto groups = sess.group_list();
         const auto binded_insert = [&](Component& comp) { insert_groups(comp, groups); };
-        const auto name = view[3];
-        if (name == "all") // component = all
+        const auto comp_name = view[3];
+        if (comp_name == "all") // component = all
         {
             if (is_add)
             {
@@ -229,23 +229,23 @@ namespace fc
         else
         {
             if (is_add
-                    ? App::instance().for_component(name, binded_insert)
-                    : App::instance().for_component(name, clear_groups))
+                    ? App::instance().for_component(comp_name, binded_insert)
+                    : App::instance().for_component(comp_name, clear_groups))
                 sess.send_message(dev_id_, fmt::format(u8"已为我加入的所有群{}组件 {}！",
-                    is_add ? u8"启用" : u8"禁用", name));
+                    is_add ? u8"启用" : u8"禁用", comp_name));
             else
-                component_not_found(sess, dev_id_, name);
+                component_not_found(sess, dev_id_, comp_name);
         }
     }
 
     void DevCommands::list_operate_single(mirai::Session& sess,
-        const bool is_user, const bool is_add, const int64_t id, const std::string_view name) const
+        const bool is_user, const bool is_add, const int64_t id, const std::string_view comp_name) const
     {
         const auto operate = [&](Component& comp)
         {
             list_operate_single_impl(comp, is_user, is_add, id);
         };
-        if (name == "all") // Component = all
+        if (comp_name == "all") // Component = all
         {
             App::instance().for_each_component(operate);
             sess.send_message(dev_id_, fmt::format(u8"已将{} {} {}所有组件的名单！",
@@ -253,11 +253,11 @@ namespace fc
         }
         else
         {
-            if (App::instance().for_component(name, operate))
+            if (App::instance().for_component(comp_name, operate))
                 sess.send_message(dev_id_, fmt::format(u8"已将{} {} {}组件 {} 的名单！",
-                    is_user ? u8"用户" : u8"群", id, is_add ? u8"加入" : u8"移出", name));
+                    is_user ? u8"用户" : u8"群", id, is_add ? u8"加入" : u8"移出", comp_name));
             else
-                component_not_found(sess, dev_id_, name);
+                component_not_found(sess, dev_id_, comp_name);
         }
     }
 

@@ -45,14 +45,14 @@ namespace fc
             sess.send_quote_message(msg, help_msg);
         else if (view.size() == 2)
         {
-            const auto name = view[1];
-            const bool found = App::instance().for_component(name, [&](const Component& comp)
+            const auto comp_name = view[1];
+            const bool found = App::instance().for_component(comp_name, [&](const Component& comp)
             {
                 if (comp.dev_only())
                     sess.send_quote_message(msg, not_found);
                 else
                     sess.send_quote_message(msg, fmt::format(u8"组件: {}\n简介: {}\n{}",
-                        name, comp->description(), comp->help_string()));
+                        comp_name, comp->description(), comp->help_string()));
             });
             if (!found) sess.send_quote_message(msg, not_found);
         }
@@ -96,8 +96,8 @@ namespace fc
         if (view.size() != 2) return false;
         const bool is_enable = view[0] == "%enable";
         if (!is_enable && view[0] != "%disable") return false;
-        const auto name = view[1];
-        const bool is_all = name == "all";
+        const auto comp_name = view[1];
+        const bool is_all = comp_name == "all";
         const auto insert = [group = msg.sender.group.id](Component& comp)
         {
             if (!comp.dev_only())
@@ -124,10 +124,10 @@ namespace fc
         else
         {
             if (is_enable
-                    ? App::instance().for_component(name, insert)
-                    : App::instance().for_component(name, remove))
+                    ? App::instance().for_component(comp_name, insert)
+                    : App::instance().for_component(comp_name, remove))
                 sess.send_quote_message(msg, fmt::format(u8"已在本群内{}组件 {}！",
-                    is_enable ? u8"启用" : u8"禁用", name));
+                    is_enable ? u8"启用" : u8"禁用", comp_name));
             else
                 sess.send_quote_message(msg, not_found);
         }

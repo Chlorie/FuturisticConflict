@@ -221,6 +221,6 @@ namespace fc
         }
 
     public:
-        TwoPlayerGame(const std::string_view name, const bool has_ai): name_(name), has_ai_(has_ai) {}
+        TwoPlayerGame(const std::string_view game_name, const bool has_ai): name_(game_name), has_ai_(has_ai) {}
     };
 }
