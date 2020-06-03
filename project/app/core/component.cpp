@@ -3,19 +3,18 @@
 #include <fmt/core.h>
 
 #include "app.h"
+#include "../utils/lock_algorithm.h"
 
 namespace fc
 {
     bool ComponentBase::passes(const mirai::gid_t group) const
     {
-        const auto whitelist = group_whitelist_.to_read();
-        return std::find(whitelist->begin(), whitelist->end(), group) != whitelist->end();
+        return lock::contains(group_whitelist_, group);
     }
 
     bool ComponentBase::passes(const mirai::uid_t user) const
     {
-        const auto blacklist = user_blacklist_.to_read();
-        return std::find(blacklist->begin(), blacklist->end(), user) == blacklist->end();
+        return !lock::contains(user_blacklist_, user);
     }
 
     std::optional<ComponentBase::TextMessage> ComponentBase::check_lists_and_trigger(
@@ -24,32 +23,21 @@ namespace fc
         std::optional<TextMessage> opt;
         event.dispatch([&](const mirai::FriendMessage& e)
         {
-            {
-                const auto list = user_blacklist_.to_read();
-                if (std::find(list->begin(), list->end(), e.sender.id)
-                    != list->end())
-                    return; // Not in blacklist
-            }
-            if (e.message.quote) return; // No quotations
-            const auto& msg = e.message.content;
-            if (msg.size() != 1) return; // Not single segment
-            if (const auto* ptr = msg.chain()[0].get_if<mirai::msg::Plain>())
-                opt = {
-                    e.sender.id, {}, e.message.source.id,
-                    mirai::utils::trim_whitespace(ptr->view())
-                };
+            if (!passes(e.sender.id)) return;
+            if (e.message.quote) return;
+            const auto segments = e.message.content.match_types<mirai::msg::Plain>();
+            if (!segments) return;
+            const auto& [plain] = *segments;
+            opt = {
+                e.sender.id, {}, e.message.source.id,
+                mirai::utils::trim_whitespace(plain.view())
+            };
         });
         event.dispatch([&, bot_id](const mirai::GroupMessage& e)
         {
-            {
-                const auto list = group_whitelist_.to_read();
-                if (std::find(list->begin(), list->end(), e.sender.group.id)
-                    == list->end())
-                    return; // Should be in whitelist
-            }
-            if (e.message.quote) return; // No quotations
-            const auto& msg = e.message.content;
-            const auto segments = msg.match_types<mirai::msg::At, mirai::msg::Plain>();
+            if (!passes(e.sender.group.id)) return;
+            if (e.message.quote) return;
+            const auto segments = e.message.content.match_types<mirai::msg::At, mirai::msg::Plain>();
             if (!segments) return; // Not "At + Plain"
             const auto& [at, plain] = *segments;
             if (at.target != bot_id) return; // Not at bot

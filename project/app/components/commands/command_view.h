@@ -11,7 +11,7 @@ namespace fc
         std::string_view cmd_;
         std::vector<std::string_view> views_;
     public:
-        explicit CommandView(const std::string& cmd);
+        explicit CommandView(std::string_view cmd);
         size_t size() const { return views_.size(); }
         std::string_view operator[](const size_t pos) const { return views_[pos]; }
         std::string_view cmd() const { return cmd_; }

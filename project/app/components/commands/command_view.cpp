@@ -2,9 +2,9 @@
 
 namespace fc
 {
-    CommandView::CommandView(const std::string& cmd) : cmd_(cmd)
+    CommandView::CommandView(const std::string_view cmd) : cmd_(cmd)
     {
-        static const std::string whitespace = " \t\r\n";
+        static constexpr const char* whitespace = " \t\r\n\v\f";
         size_t begin = 0;
         while (true)
         {

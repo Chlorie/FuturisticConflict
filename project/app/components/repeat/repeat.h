@@ -16,7 +16,7 @@ namespace fc
     private:
         size_t length_ = 0;
         std::string msg_;
-        std::unordered_map<mirai::uid_t, size_t> count_;
+        std::map<mirai::uid_t, size_t> count_;
 
     public:
         RepeatInfo add_msg(mirai::uid_t user, const std::string& msg);
@@ -29,7 +29,7 @@ namespace fc
         inline static constexpr std::string_view name = "Repeat";
 
     private:
-        lock::unordered_map<mirai::gid_t, RepeatChain> chains_;
+        lock::map<mirai::gid_t, RepeatChain> chains_;
         mirai::uid_t dev_id_;
 
     protected:

@@ -8,8 +8,12 @@ int main() // NOLINT
         fc::App app;
         std::cout << "Bot session successfully started!\n";
         app.add_component<fc::DevCommands>();
+        app.add_component<fc::UserCommands>();
+        app.add_component<fc::OthelloGame>();
         app.add_component<fc::Repeat>();
+        app.add_component<fc::AntiRecall>();
         app.add_component<fc::DiceRoll>();
+        app.add_component<fc::RandomSelect>();
         std::cout << "All components initialized!\nPress Enter to stop...";
         std::cin.get();
         std::cout << "Stopping...\n";

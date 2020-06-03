@@ -60,6 +60,8 @@ namespace fc
         std::string_view help_string() const { return help_string_; }
         auto& group_whitelist() { return group_whitelist_; }
         auto& user_blacklist() { return user_blacklist_; }
+        const auto& group_whitelist() const { return group_whitelist_; }
+        const auto& user_blacklist() const { return user_blacklist_; }
     };
 
     class Component final

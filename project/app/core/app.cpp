@@ -15,10 +15,10 @@ namespace fc
 
     App::App()
     {
-        std::ifstream fs("config.json");
-        std::stringstream ss;
-        ss << fs.rdbuf();
         {
+            std::ifstream fs("config.json");
+            std::stringstream ss;
+            ss << fs.rdbuf();
             const auto config = config_.to_write();
             *config = json::parse(ss.str());
             session_ = mirai::Session(config->auth_key, config->bot_id);
@@ -47,6 +47,7 @@ namespace fc
     void App::save_data()
     {
         {
+            std::shared_lock lock(components_mutex_);
             const auto config = config_.to_write();
             for (const auto& comp : components_)
                 comp.save_data(*config);
@@ -58,6 +59,23 @@ namespace fc
         {
             const auto config = config_.to_read();
             stream << json(*config).dump(2);
+        }
+    }
+
+    void App::load_data()
+    {
+        {
+            std::ifstream fs("config.json");
+            std::stringstream ss;
+            ss << fs.rdbuf();
+            const auto config = config_.to_write();
+            *config = json::parse(ss.str());
+        }
+        {
+            std::shared_lock lock(components_mutex_);
+            const auto config = config_.to_read();
+            for (auto& comp : components_)
+                comp.load_data(*config);
         }
     }
 }

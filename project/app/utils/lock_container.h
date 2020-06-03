@@ -3,8 +3,8 @@
 #include <mutex>
 #include <shared_mutex>
 #include <vector>
-#include <unordered_map>
-#include <unordered_set>
+#include <map>
+#include <set>
 
 namespace fc
 {
@@ -46,27 +46,18 @@ namespace fc
         private:
             std::shared_lock<std::shared_mutex> lock_;
             const DataType* data_;
-            const DataType* accessed_data_;
             SharedLockedData(std::shared_mutex& mutex, const DataType& data) :
-                lock_(mutex), data_(std::addressof(data)), accessed_data_(data_) {}
+                lock_(mutex), data_(std::addressof(data)) {}
         public:
-            const DataType& get() const { return *accessed_data_; }
-            const DataType& operator*() const { return *accessed_data_; }
-            const DataType* operator->() const { return accessed_data_; }
+            const DataType& get() const { return *data_; }
+            const DataType& operator*() const { return *data_; }
+            const DataType* operator->() const { return data_; }
             template <typename Index>
-            auto operator[](Index&& index) const { return (*accessed_data_)[std::forward<Index>(index)]; }
+            auto operator[](Index&& index) const { return (*data_)[std::forward<Index>(index)]; }
             template <typename... Types>
-            auto operator()(Types&&... args) const { return (*accessed_data_)(std::forward<Types>(args)...); }
-            void unlock()
-            {
-                accessed_data_ = nullptr;
-                lock_.unlock();
-            }
-            void lock()
-            {
-                accessed_data_ = data_;
-                lock_.lock();
-            }
+            auto operator()(Types&&... args) const { return (*data_)(std::forward<Types>(args)...); }
+            void unlock() { lock_.unlock(); }
+            void lock() { lock_.lock(); }
         };
     private:
         mutable std::shared_mutex mutex_;
@@ -103,7 +94,7 @@ namespace fc
     namespace lock
     {
         template <typename T> using vector = GuardedData<std::vector<T>>;
-        template <typename T> using unordered_set = GuardedData<std::unordered_set<T>>;
-        template <typename K, typename V> using unordered_map = GuardedData<std::unordered_map<K, V>>;
+        template <typename K, typename V> using map = GuardedData<std::map<K, V>>;
+        template <typename T> using set = GuardedData<std::set<T>>;
     }
 }
