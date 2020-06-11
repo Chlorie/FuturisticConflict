@@ -30,7 +30,7 @@ namespace fc
     {
         if (view[0] != "%help") return false;
         static constexpr auto help_msg =
-            u8R"(这里是对立，或者叫Tairitsu，是音乐游戏Arcaea中的第一女主角（确信）（不服气的话可能会被拿伞打成骨折）。
+            u8R"(这里是对立，或者叫Tairitsu，是音乐游戏Arcaea中的第一女主角（确信）（不服气的话可能会被我拿伞在暴风雨中打成骨折）。
 为了更好地愉快（棒读）地玩耍，你可以通过以下的指令来跟我互动！
 --全员可用--
 %help: 显示这个帮助列表

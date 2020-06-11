@@ -293,7 +293,7 @@ namespace fc
 
     void DevCommands::do_on_event(mirai::Session& sess, const mirai::Event& event)
     {
-        event.dispatch([&](const mirai::FriendMessage& e)
+        const auto callable = [&](const auto& e)
         {
             if (e.sender.id != dev_id_) return;
             if (!e.message.content.starts_with("!")) return;
@@ -306,6 +306,8 @@ namespace fc
             if (load(sess, view)) return;
             if (components(sess, view)) return;
             if (list(sess, view)) return;
-        });
+        };
+        event.dispatch<mirai::FriendMessage>(callable);
+        event.dispatch<mirai::GroupMessage>(callable);
     }
 }

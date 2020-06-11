@@ -6,8 +6,8 @@ namespace fc
     {
         const int x = grid_size * (column + 1);
         const int y = grid_size * (row + 1);
-        static constexpr uint32_t black = 0x000000ff;
-        static constexpr uint32_t white = 0xd0d0d0ff;
+        static constexpr uint32_t black = 0x000000ffu;
+        static constexpr uint32_t white = 0xd0d0d0ffu;
         image.draw_circle(static_cast<float>(x), static_cast<float>(y),
             disk_radius, is_black ? black : white);
     }
@@ -16,8 +16,8 @@ namespace fc
     {
         const int x = grid_size * (column + 1);
         const int y = grid_size * (row + 1);
-        static constexpr uint32_t red = 0x7f0000ff;
-        static constexpr uint32_t green = 0x007f20ff;
+        static constexpr uint32_t red = 0x7f0000ffu;
+        static constexpr uint32_t green = 0x007f20ffu;
         image.draw_circle(static_cast<float>(x), static_cast<float>(y),
             hint_radius, is_previous ? red : green);
     }

@@ -110,9 +110,7 @@ namespace fc
             {
                 gaming_groups_->insert(group);
                 matches_->insert({
-                    group, random::bernoulli_bool()
-                               ? MatchInfo{ user, e.sender.id, {} }
-                               : MatchInfo{ e.sender.id, user, {} }
+                    group, MatchInfo{ e.sender.id, user, {} }
                 });
                 sess.send_message(group, mirai::Message{
                     mirai::msg::At{ user },
@@ -146,16 +144,21 @@ namespace fc
                 const auto locked = matches_.to_write();
                 const auto iter = locked->find(e.sender.group.id);
                 if (iter == locked->end()) return false;
-                response_timeout_scheduler_.cancel(e.sender.group.id);
                 auto& match = iter->second;
-                if (match.first == e.sender.id)
+                if (match.state) return false;
+                else if (match.second == mirai::uid_t{}) // Group-wide challenge
                 {
-                    sess.send_quote_message(e,
-                        u8"左右手互搏就不要找我了，你考虑过你自己刷屏对群友造成的影响吗？");
-                    locked->erase(iter);
-                    gaming_groups_->erase(e.sender.group.id);
-                    return true;
+                    if (match.first == e.sender.id)
+                    {
+                        sess.send_quote_message(e,
+                            u8"左右手互搏就不要找我了，你考虑过你自己刷屏对群友造成的影响吗？");
+                        locked->erase(iter);
+                        gaming_groups_->erase(e.sender.group.id);
+                        return true;
+                    }
                 }
+                else if (match.second != e.sender.id) return false;
+                response_timeout_scheduler_.cancel(e.sender.group.id);
                 match.second = e.sender.id;
                 match.state = GameState{};
                 if (random::bernoulli_bool()) std::swap(match.first, match.second);
@@ -211,6 +214,7 @@ namespace fc
         {
             event.dispatch([&](const mirai::GroupMessage& e)
             {
+                if (!passes(e.sender.group.id)) return;
                 if (e.message.quote) return;
                 if (send_challenge(sess, e)) return;
                 if (accept_challenge(sess, e)) return;

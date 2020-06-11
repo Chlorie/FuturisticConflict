@@ -9,7 +9,7 @@ namespace fc::gfx
     class Image final
     {
     private:
-        int width_ = 0, height_ = 0, channel_ = 0;
+        int width_ = 0, height_ = 0;
         uint8_t* data_ = nullptr;
 
     public:
@@ -23,10 +23,12 @@ namespace fc::gfx
         void swap(Image& other) noexcept;
         friend void swap(Image& lhs, Image& rhs) noexcept { lhs.swap(rhs); }
 
-        size_t size() const { return static_cast<size_t>(width_ * height_ * channel_); }
+        size_t size() const { return static_cast<size_t>(4 * width_ * height_); }
         bool empty() const { return !data_; }
 
         void draw_circle(float x, float y, float r, uint32_t color);
+        void draw_rectangle(int x, int y, int w, int h, uint32_t color);
+        void draw_image(const Image& image, int x, int y);
 
         void save(const fs::path& file) const;
     };

@@ -10,7 +10,7 @@ set(SOURCE_FILES
     "components/anti_recall.cpp" "components/commands/user_commands.cpp"
     "components/othello/othello_graphics.cpp" "components/othello/othello_ai.cpp"
     "components/othello/othello_game.cpp" "components/othello/othello_logic.cpp"
-    "utils/random.cpp" "utils/image.cpp")
+    "utils/random.cpp" "utils/image.cpp" "components/uttt/uttt_logic.cpp" "components/uttt/uttt_graphics.cpp" "components/uttt/uttt_game.cpp")
 
 add_executable(${APP_NAME} ${SOURCE_FILES})
 

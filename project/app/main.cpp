@@ -10,6 +10,7 @@ int main() // NOLINT
         app.add_component<fc::DevCommands>();
         app.add_component<fc::UserCommands>();
         app.add_component<fc::OthelloGame>();
+        app.add_component<fc::UtttGame>();
         app.add_component<fc::Repeat>();
         app.add_component<fc::AntiRecall>();
         app.add_component<fc::DiceRoll>();

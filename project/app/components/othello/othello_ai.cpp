@@ -49,7 +49,7 @@ namespace fc::oth
         {
             const BitBoard occupied = state.black | state.white;
             if (!(occupied & 0xff818181818181ffull)) return false; // Edge occupied
-            return (occupied & 0x00003c3c3c3c0000ull) != 0x00003c3c3c3c0000ull; // "Sweet 16"
+            return (occupied & 0x00003c3c3c3c0000ull) != 0x00003c3c3c3c0000ull; // Center 4x4
         }
 
         // Perform perfectly in end game
