@@ -36,13 +36,20 @@ namespace fc
 
         std::optional<TextMessage> check_lists_and_trigger(mirai::uid_t bot_id, const mirai::Event& event) const;
 
-        template <typename Func,
-            std::void_t<std::invoke_result_t<Func, std::string_view>>* = nullptr>
+        template <typename Func, std::enable_if_t<
+            std::is_invocable_v<Func, std::string_view> ||
+            std::is_invocable_v<Func, mirai::msgid_t, std::string_view>>* = nullptr>
         void check_and_reply(mirai::Session& sess, const mirai::Event& event, Func&& func) const
         {
             const auto opt = check_lists_and_trigger(sess.qq(), event);
             if (!opt) return;
-            const auto res = std::forward<Func>(func)(opt->text);
+            const auto res = [&]()
+            {
+                if constexpr (std::is_invocable_v<Func, std::string_view>)
+                    return std::forward<Func>(func)(opt->text);
+                else
+                    return std::forward<Func>(func)(opt->msgid, opt->text);
+            }();
             if (!res) return;
             if (opt->group != mirai::gid_t{})
                 sess.send_message(opt->group, *res, opt->msgid);

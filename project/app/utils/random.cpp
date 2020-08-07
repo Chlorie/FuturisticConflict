@@ -1,6 +1,7 @@
 #include "random.h"
 
-#include <random>
+#include <numeric>
+#include <algorithm>
 
 namespace fc::random
 {
@@ -110,4 +111,14 @@ namespace fc::random
         std::student_t_distribution<float> dist(nu);
         return dist(gen);
     }
+
+    std::vector<size_t> permute(const size_t size)
+    {
+        std::vector<size_t> result(size);
+        std::iota(result.begin(), result.end(), static_cast<size_t>(0));
+        std::shuffle(result.begin(), result.end(), gen);
+        return result;
+    }
+
+    std::mt19937& generator() { return gen; }
 }

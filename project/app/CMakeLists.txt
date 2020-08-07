@@ -4,13 +4,30 @@ set(APP_NAME app)
 
 set(SOURCE_FILES
     "main.cpp"
-    "core/app.cpp" "core/config.cpp" "core/component.cpp"
-    "components/commands/command_view.cpp" "components/commands/dev_commands.cpp"
-    "components/repeat/repeat.cpp" "components/dice_roll.cpp" "components/random_select.cpp"
-    "components/anti_recall.cpp" "components/commands/user_commands.cpp"
-    "components/othello/othello_graphics.cpp" "components/othello/othello_ai.cpp"
-    "components/othello/othello_game.cpp" "components/othello/othello_logic.cpp"
-    "utils/random.cpp" "utils/image.cpp" "components/uttt/uttt_logic.cpp" "components/uttt/uttt_graphics.cpp" "components/uttt/uttt_game.cpp")
+    "core/app.cpp"
+    "core/config.cpp"
+    "core/component.cpp"
+    "components/commands/command_view.cpp"
+    "components/commands/dev_commands.cpp"
+    "components/repeat/repeat.cpp"
+    "components/dice_roll.cpp"
+    "components/random_utils.cpp"
+    "components/anti_recall.cpp"
+    "components/chinitsu/chinitsu_quiz.cpp"
+    "components/chinitsu/info_table.cpp"
+    "components/chinitsu/tiles.cpp"
+    "components/commands/user_commands.cpp"
+    "components/othello/othello_graphics.cpp"
+    "components/othello/othello_ai.cpp"
+    "components/othello/othello_game.cpp"
+    "components/othello/othello_logic.cpp"
+    "components/uttt/uttt_logic.cpp"
+    "components/uttt/uttt_graphics.cpp"
+    "components/uttt/uttt_game.cpp"
+    "components/uttt/uttt_ai.cpp"
+    "utils/random.cpp"
+    "utils/image.cpp"
+)
 
 add_executable(${APP_NAME} ${SOURCE_FILES})
 

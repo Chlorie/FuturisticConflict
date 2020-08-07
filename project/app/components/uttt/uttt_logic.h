@@ -1,26 +1,44 @@
 #pragma once
 
 #include <array>
+#include <bitset>
 
 namespace fc
 {
     class UtttLogic final
     {
     public:
-        enum class Spot : int8_t
+        enum class Spot : uint8_t
         {
-            x = -1,
             blank = 0,
             o = 1,
-            draw = 2
+            draw = 2,
+            x = 3,
         };
-        enum class Result : int8_t
+        enum class Result : uint8_t
         {
-            x_win = -1,
             not_finished = 0,
             o_win = 1,
-            draw = 2
+            draw = 2,
+            x_win = 3,
         };
+
+        //class State final
+        //{
+        //private:
+        //    std::bitset<180> xs_;
+        //    //std::bitset<90> os_;
+        //public:
+        //    Spot operator[](size_t index)
+        //    {
+        //        
+        //    }
+        //    Spot operator()(const size_t row, const size_t column)
+        //    {
+        //        constexpr size_t size = sizeof(State);
+        //    }
+        //};
+
         using State = std::array<std::array<Spot, 9>, 9>;
         using GlobalState = std::array<std::array<Spot, 3>, 3>;
     private:

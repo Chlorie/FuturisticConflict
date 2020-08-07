@@ -204,11 +204,7 @@ namespace fc
         virtual bool process_msg(mirai::Session& sess, const mirai::GroupMessage& e) = 0;
         virtual void give_up_msg(mirai::Session& sess, const mirai::Member& member, const MatchInfo& game) = 0;
 
-        void end_game(const mirai::gid_t group)
-        {
-            matches_->erase(group);
-            gaming_groups_->erase(group);
-        }
+        static void end_game(const mirai::gid_t group) { gaming_groups_->erase(group); }
 
         void do_on_event(mirai::Session& sess, const mirai::Event& event) override
         {

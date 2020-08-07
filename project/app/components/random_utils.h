@@ -4,11 +4,11 @@
 
 namespace fc
 {
-    class RandomSelect final : public ComponentBase
+    class RandomUtils final : public ComponentBase
     {
     public:
         inline static constexpr bool dev_only = false;
-        inline static constexpr std::string_view name = "RandomSelect";
+        inline static constexpr std::string_view name = "RandomUtils";
 
     private:
         static std::optional<std::string> process(std::string_view msg);

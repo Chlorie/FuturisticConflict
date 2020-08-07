@@ -105,7 +105,7 @@ namespace fc::gfx
                 (255 * a * g + dst[1] * (255 - a) * dst[3]) / (255 * out_alpha));
             dst[2] = static_cast<uint8_t>(
                 (255 * a * b + dst[2] * (255 - a) * dst[3]) / (255 * out_alpha));
-            dst[3] = out_alpha;
+            dst[3] = static_cast<uint8_t>(out_alpha);
         };
         const int min_x = std::max(x, 0);
         const int max_x = std::min(x + w, width_);

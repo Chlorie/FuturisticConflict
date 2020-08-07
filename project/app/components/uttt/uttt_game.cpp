@@ -104,7 +104,11 @@ namespace fc
             sess.send_quote_message(e, u8"你不能在这个位置落子。");
             return true;
         }
-        if (play_at(sess, group, game, row, column)) end_game(group);
+        if (play_at(sess, group, game, row, column))
+        {
+            locked->erase(iter);
+            end_game(group);
+        }
         return true;
     }
 

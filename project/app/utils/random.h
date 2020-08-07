@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
+#include <random>
 
 namespace fc::random
 {
@@ -21,4 +23,8 @@ namespace fc::random
     float cauchy_float(float x0 = 0.0f, float gamma = 1.0f);
     float fisher_f_float(int32_t d1 = 1, int32_t d2 = 1);
     float student_t_float(float nu = 1.0f);
+
+    std::vector<size_t> permute(size_t size);
+
+    std::mt19937& generator();
 }
